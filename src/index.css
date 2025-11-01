@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+
+
+/* Theme vars */
+:root{
+  --bg-dark: #061018;
+  --panel: rgba(10,15,20,0.72);
+  --glass-border: rgba(255,255,255,0.04);
+  --neon-cyan: #2EE6F5;
+  --neon-mag: #FF5FA2;
+  --muted: rgba(255,255,255,0.55);
+}
+
+/* App background wallpaper + cinematic vignette */
+html,body,#root {
+  height: 100%;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: #eaeef2;
+  background-color: var(--bg-dark);
+  position: relative;
+}
+
+/* Put the wallpaper behind everything. Save wallpaper to public/hero.jpg */
+.app-wallpaper::before{
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url('/hero.jpg');
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.12; /* subtle texture behind map */
+  mix-blend-mode: normal;
+  z-index: 0;
+  filter: saturate(75%) contrast(85%);
+}
+
+/* Add cinematic vignette and center spotlight */
+.app-wallpaper::after{
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1000px 600px at 50% 35%, rgba(255,255,255,0.02), transparent 8%),
+    linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.6));
+  mix-blend-mode: multiply;
+  z-index: 1;
+}
+
+/* container-level stacking fix so UI sits above wallpaper */
+.app-ui {
+  position: relative;
+  z-index: 2;
+}
+
+/* Glass card base used for side panels and small floating cards */
+.glass {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.02),
+    inset 0 -14px 40px rgba(0,0,0,0.65),
+    0 12px 40px rgba(0,0,0,0.6);
+}
+
+/* map container */
+.leaflet-container {
+  border-radius: 14px;
+  height: calc(86vh);
+  box-shadow: 0 18px 50px rgba(0,0,0,0.6);
+  position: relative;
+  z-index: 0;
+}
+
+/* darker overlay on map to drop exposure and raise contrast */
+.leaflet-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.14));
+  mix-blend-mode: multiply;
+  border-radius: 14px;
+}
+
+/* marker glow, stronger */
+.marker-glow {
+  filter: blur(8px) drop-shadow(0 0 38px rgba(46,230,245,0.26)) drop-shadow(0 0 46px rgba(255,95,162,0.14));
+  mix-blend-mode: screen;
+}
+
+/* popup overrides */
+.leaflet-popup-content-wrapper {
+  background: linear-gradient(180deg, rgba(8,12,18,0.96), rgba(8,12,18,0.86)) !important;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.04) !important;
+  color: #fff;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.7);
+}
+.leaflet-popup-tip { display: none; }
+
+/* animated neon line style */
+.animated-line {
+  stroke-width: 3;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 8 16;
+  animation: dash 1.6s linear infinite;
+  filter: drop-shadow(0 0 12px rgba(46,230,245,0.45));
+}
+@keyframes dash { to { stroke-dashoffset: -32; } }
+
+/* gauge and floating card style */
+.gauge-card {
+  background: linear-gradient(180deg, rgba(10,14,18,0.78), rgba(10,14,18,0.62));
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 14px;
+  width: 340px;
+  box-shadow: 0 18px 46px rgba(0,0,0,0.6);
+}
+
+/* glass button */
+.btn-frost {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.03);
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: transform .14s ease, box-shadow .14s ease;
+}
+.btn-frost:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,0.45); }
+
+/* compact sidebar scrollbar */
+.sidebar-scroll::-webkit-scrollbar { width: 8px; }
+.sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 8px; }
+
+/* gauge card subtle overlay */
+.gauge-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  pointer-events: none;
+  box-shadow: inset 0 -40px 80px rgba(0,0,0,0.45);
+}
+
+/* small type adjustments */
+.hint { color: rgba(255,255,255,0.62); font-size: 12px; }
+
+
+/* tint tiles to navy-blue / neon look */
+.leaflet-container .leaflet-tile {
+  filter: brightness(0.82) contrast(1.08) saturate(1.25) hue-rotate(190deg);
+  mix-blend-mode: screen;
+}
